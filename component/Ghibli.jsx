@@ -13,7 +13,7 @@ const Ghibli = () => {
   const [ghibli, setGhibli] = useState([]);
   const [seenMovies, setSeenMovies] = useState([]);
   const [wantSee, setWantSee] = useState([]);
-  const [value, setValue] = useState("");
+  const [search, setSearch] = useState("");
 
   const fetchMovies = async () => {
     try {
@@ -23,8 +23,6 @@ const Ghibli = () => {
       const res = await response.json();
 
       setGhibli(res);
-      // console.log(res);
-      // console.log(ghibli)
 
     } catch (error) {
       console.log(error);
@@ -36,79 +34,66 @@ const Ghibli = () => {
 
   return (
     <View>
-      <View>
+      <View style={style.topColumn}>
         <Text style={style.header}>Studio Ghibli Movies!</Text>
         <TextInput
-          value={value}
-          placeholderTextColor={"red"}
+          style={style.inputstyle}
+          value={search}
           placeholder={"Search for a Studio Ghibli movie "}
-          onChangeText={(inputText) => {
-            setValue(inputText);
+          underlineColorAndroid="transparent"
+          onChangeText={(input) => {
+            setSearch(input);
           }}
         />
       </View>
 
       <View style={style.container}>
         <View style={style.column}>
-            <Text style={style.header}>Movies</Text>
-            <View style={style.flatlistView}>
-              <FlatList
-                data={ghibli.filter((item) => {
-                  if (!value) {
-                    return true;
-                  }
-
-                  if (
-                    item.title.toUpperCase().includes(value.toUpperCase())
-                  ) {
-                    return true;
-                  }
-                })}
-                renderItem={({ item }) => (
-                  <View>
-                    <TouchableOpacity
+          <Text style={style.header}>Movies</Text>
+          <View style={style.flatlistView}>
+            <FlatList
+              data={ghibli.filter((item) => {
+                return item.title.toUpperCase().includes(search.toUpperCase())
+              })}
+              renderItem={({ item }) => (
+                <View style={style.column}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (
+                        seenMovies.filter(
+                          (ghibli) => ghibli.title === item.title
+                        ).length === 0
+                      ) {
+                        setSeenMovies([...seenMovies, item]);
+                      }
+                    }}
+                  >
+                    <Text style={style.button}>Seen already</Text>
+                  </TouchableOpacity>
+                  <Text
+                    style={style.listTextStyle}>
+                    {item.title}
+                  </Text>
+                  <TouchableOpacity
                     style={style.button}
-                      onPress={() => {
-                        if (
-                          seenMovies.filter(
-                            (ghibli) => ghibli.title === item.title
-                          ).length === 0
-                        ) {
-                          setSeenMovies([...seenMovies, item]);
-                        }
-                      }}
-                    >
-                      <Text>Seen already</Text>
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        paddingVertical: 4,
-                        fontSize: 16,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {item.title}
-                    </Text>
-                    <TouchableOpacity
-                      style={style.button}
-                      onPress={() => {
-                        if (
-                          wantSee.filter(
-                            (ghibli) => ghibli.title === item.title
-                          ).length === 0
-                        ) {
-                          setWantSee([...wantSee, item]);
-                        }
-                      }}
-                    >
-                      <Text>Want to see</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          
+                    onPress={() => {
+                      if (
+                        wantSee.filter(
+                          (ghibli) => ghibli.title === item.title
+                        ).length === 0
+                      ) {
+                        setWantSee([...wantSee, item]);
+                      }
+                    }}
+                  >
+                    <Text>Want to see</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
+
         </View>
         <View style={style.column}>
           <Text style={style.header}>Seen movies</Text>
@@ -117,12 +102,7 @@ const Ghibli = () => {
               data={seenMovies}
               renderItem={({ item }) => (
                 <Text
-                  style={{
-                    paddingVertical: 4,
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
-                >
+                  style={style.listTextStyle}>
                   {item.title}
                 </Text>
               )}
@@ -134,19 +114,16 @@ const Ghibli = () => {
           <Text style={style.header}>Movies i want to see</Text>
           <View style={style.flatlistView}>
             <FlatList
-            scrollEnabled={true}
+              scrollEnabled={true}
               data={wantSee}
               renderItem={({ item }) => (
                 <Text
-                  style={{
-                    paddingVertical: 4,
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
+                  style={style.listTextStyle}
                 >
                   {item.title}
                 </Text>
               )}
+              keyExtractor={(item) => item.id}
             />
           </View>
         </View>
@@ -174,10 +151,23 @@ const style = StyleSheet.create({
     flex: 1,
   },
   button: {
-    color: "black"
+    color: "black",
   },
   border: {
     borderWidth: 1,
+  },
+  topColumn: {
+    alignItems: "center",
+  },
+  listTextStyle: {
+    paddingVertical: 4,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  inputstyle: {
+    height: 40,
+    borderWidth: 1,
+    backgroundColor: "white"
   }
 });
 

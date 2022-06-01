@@ -5,6 +5,7 @@ import Ghibli from './component/Ghibli';
 export default function App() {
   return (
     <View style={styles.container}>
+      <StatusBar style='auto'/>
       <Ghibli/>
     </View>
   );
@@ -12,7 +13,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 25,
     backgroundColor: "lightblue",
     height: "100%",
   },
