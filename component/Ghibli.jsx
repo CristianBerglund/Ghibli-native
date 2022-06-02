@@ -62,7 +62,7 @@ const Ghibli = () => {
                       if (
                         seenMovies.filter(
                           (ghibli) => ghibli.title === item.title
-                        ).length === 0
+                        )
                       ) {
                         setSeenMovies([...seenMovies, item]);
                       }
@@ -80,7 +80,7 @@ const Ghibli = () => {
                       if (
                         wantSee.filter(
                           (ghibli) => ghibli.title === item.title
-                        ).length === 0
+                        )
                       ) {
                         setWantSee([...wantSee, item]);
                       }
