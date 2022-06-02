@@ -114,7 +114,6 @@ const Ghibli = () => {
           <Text style={style.header}>Movies i want to see</Text>
           <View style={style.flatlistView}>
             <FlatList
-              scrollEnabled={true}
               data={wantSee}
               renderItem={({ item }) => (
                 <Text
